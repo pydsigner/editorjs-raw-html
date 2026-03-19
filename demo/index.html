@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Editor.js Raw HTML - Demo</title>
+  <link rel="stylesheet" href="../src/index.css">
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; }
+    #editorjs { background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e6e6e6; }
+  </style>
+</head>
+<body>
+  <h1>Raw HTML Tool — Demo</h1>
+  <p>Inline demo of the `RawHtmlTool` from <code>src/index.js</code>.</p>
+
+  <div id="editorjs"></div>
+  <button id="save-btn">Save Content</button>
+  <pre id="output"></pre>
+
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest/dist/editor.js"></script>
+  <script type="module">
+    import { RawHtmlTool } from '../src/index.js';
+
+    const editor = new EditorJS({
+      holder: 'editorjs',
+      tools: {
+        rawHtml: {
+          class: RawHtmlTool,
+          inlineToolbar: true
+        }
+      },
+      data: {
+        blocks: [
+          {
+            type: 'rawHtml',
+            data: {
+              html: '<p><strong>Try editing this HTML</strong> by clicking "Edit HTML" in the tune menu.</p>'
+            }
+          }
+        ]
+      }
+    });
+
+    document.getElementById('save-btn').addEventListener('click', async () => {
+      try {
+        const output = await editor.save();
+        document.getElementById('output').textContent = JSON.stringify(output, null, 2);
+      } catch (error) {
+        console.error('Saving failed:', error);
+      }
+    });
+
+    // Expose for debugging
+    window.__editor = editor;
+  </script>
+</body>
+</html>
