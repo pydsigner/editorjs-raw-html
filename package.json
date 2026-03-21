@@ -1,6 +1,6 @@
 {
   "name": "editorjs-raw-html",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A raw HTML tool for Editor.js with automatic preview",
   "keywords": [
     "editor.js"
