@@ -1,3 +1,5 @@
+import './index.css';
+
 export class RawHtmlTool {
     constructor({ data, config, api, readOnly }) {
         this.api = api;

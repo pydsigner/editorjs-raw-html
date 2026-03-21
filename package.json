@@ -16,9 +16,12 @@
   "license": "Apache-2.0",
   "author": "Daniel Foerster <df@d48.io>",
   "type": "commonjs",
-  "main": "index.js",
+  "source": "src/index.js",
+  "main": "dist/bundle.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": ""
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.4"
   }
 }
