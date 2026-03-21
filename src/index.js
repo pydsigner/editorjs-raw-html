@@ -5,6 +5,7 @@ class RawHtmlTool {
         this.api = api;
         this.readOnly = readOnly;
         this._data = data && typeof data.html === 'string' ? data.html : '';
+        this._preview = !data || typeof data.preview !== 'boolean' ? true : data.preview;
         this._container = null;
     }
 
@@ -25,18 +26,14 @@ class RawHtmlTool {
         const container = document.createElement('div');
         container.classList.add('ce-raw-html');
 
-        const preview = document.createElement('div');
-        preview.classList.add('ce-raw-html__preview');
-        preview.innerHTML = this._data || '';
-        container.appendChild(preview);
-
         this._container = container;
+        this.syncPreview();
 
         // If there's no data, open the edit modal so the user can add HTML immediately.
         // Avoid activating in read-only contexts (check common readOnly flags).
         if (!this._data && !this.readOnly) {
             // Defer to next tick so Editor.js can mount the block first.
-            setTimeout(() => this.openModal(preview), 0);
+            setTimeout(() => this.openModal(), 0);
         }
 
         return container;
@@ -51,15 +48,55 @@ class RawHtmlTool {
             {
                 icon: '<svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z" fill="currentColor"/></svg>',
                 label: 'Edit HTML',
+                closeOnActivate: true,
                 onActivate: () => {
-                    const preview = this._container && this._container.querySelector('.ce-raw-html__preview');
-                    if (preview) this.openModal(preview);
+                    this.openModal();
+                }
+            },
+            {
+                icon: '<svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill="currentColor"/></svg>',
+                label: this._preview ? 'Hide Preview' : 'Show Preview',
+                closeOnActivate: true,
+                onActivate: () => {
+                    this._preview = !this._preview;
+                    this.syncPreview();
                 }
             }
         ];
     }
 
-    openModal(preview) {
+    syncPreview() {
+        if (!this._container) return;
+
+        const existingPreview = this._container.querySelector('.ce-raw-html__preview');
+        const existingPlaceholder = this._container.querySelector('.ce-raw-html__placeholder');
+
+        if (!this._preview) {
+            if (existingPreview) existingPreview.remove();
+
+            if (!existingPlaceholder) {
+                const placeholder = document.createElement('div');
+                placeholder.classList.add('ce-raw-html__placeholder');
+                placeholder.innerText = 'Preview disabled';
+                this._container.appendChild(placeholder);
+            }
+            return;
+        }
+
+        if (existingPlaceholder) existingPlaceholder.remove();
+
+        if (existingPreview) {
+            existingPreview.innerHTML = this._data || '';
+            return;
+        }
+
+        const preview = document.createElement('div');
+        preview.classList.add('ce-raw-html__preview');
+        preview.innerHTML = this._data || '';
+        this._container.appendChild(preview);
+    }
+
+    openModal() {
         const overlay = document.createElement('div');
         overlay.classList.add('ce-raw-html__overlay');
 
@@ -79,7 +116,7 @@ class RawHtmlTool {
         saveBtn.innerText = 'Save';
         saveBtn.addEventListener('click', () => {
             this._data = textarea.value;
-            preview.innerHTML = this._data;
+            this.syncPreview();
             document.body.removeChild(overlay);
         });
 
@@ -117,12 +154,16 @@ class RawHtmlTool {
 
     save() {
         return {
-            html: this._data || ''
+            html: this._data || '',
+            preview: this._preview
         };
     }
 
     validate(savedData) {
-        return typeof savedData.html === 'string';
+        return (
+            typeof savedData.html === 'string' &&
+            (typeof savedData.preview === 'boolean' || typeof savedData.preview === 'undefined')
+        );
     }
 }
 

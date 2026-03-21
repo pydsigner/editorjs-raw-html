@@ -1,12 +1,19 @@
-.ce-raw-html__preview {
+.ce-raw-html__preview,
+.ce-raw-html__placeholder {
     padding: 8px;
-    border: 1px solid #e6e6e6;
     border-radius: 4px;
     min-height: 40px;
 }
 
-.ce-raw-html__actions {
-    margin-top: 6px;
+.ce-raw-html__preview {
+    border: 1px solid #e6e6e6;
+}
+
+.ce-raw-html__placeholder {
+    border: 1px dashed #d0d0d0;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
 }
 
 .ce-raw-html__save-btn,
@@ -61,8 +68,4 @@
     background: #0069ff;
     color: #fff;
     border-color: #0069ff;
-}
-
-.ce-raw-html__cancel-btn {
-    background: #fff;
 }
