@@ -1,6 +1,6 @@
 import './index.css';
 
-export class RawHtmlTool {
+class RawHtmlTool {
     constructor({ data, config, api, readOnly }) {
         this.api = api;
         this.readOnly = readOnly;
@@ -125,3 +125,5 @@ export class RawHtmlTool {
         return typeof savedData.html === 'string';
     }
 }
+
+module.exports = RawHtmlTool;
