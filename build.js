@@ -10,6 +10,7 @@ async function build() {
     startTime = Date.now();
     const result = await esbuild.build({
         entryPoints: ['src/index.js'],
+        globalName: 'RawHtmlTool',
         bundle: true,
         minify: true,
         outfile: OUTFILE,

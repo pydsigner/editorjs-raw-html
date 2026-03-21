@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Editor.js Raw HTML - Demo</title>
-  <link rel="stylesheet" href="../src/index.css">
   <style>
     body { font-family: system-ui, sans-serif; padding: 24px; }
     #editorjs { background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e6e6e6; }
@@ -19,9 +18,8 @@
   <pre id="output"></pre>
 
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest/dist/editor.js"></script>
+  <script src="../dist/bundle.js"></script>
   <script type="module">
-    import { RawHtmlTool } from '../src/index.js';
-
     const editor = new EditorJS({
       holder: 'editorjs',
       tools: {
